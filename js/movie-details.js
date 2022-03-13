@@ -2,12 +2,14 @@ const dataApI = 'https://www.omdbapi.com/?apikey=914235e5';
 
 details();
 
+// get the details for the current Movie - fetched using localstorage
 function details(){
     let movieId = localStorage.getItem('currentImage');
     let APIUrl = dataApI + "&i=" + movieId;
     searchInAPI(APIUrl);
 }
 
+// fetch the data for the favourite movie item
 async function searchInAPI(APIUrl) {
     let moviesData = await fetch(APIUrl);
     if(moviesData.status == 200){
@@ -15,6 +17,7 @@ async function searchInAPI(APIUrl) {
     }
 }
 
+// Append Html code and content to it using fetched data
 async function moviesContent(moviesData){
     console.log(moviesData);
     let movieContent = document.createElement('div');

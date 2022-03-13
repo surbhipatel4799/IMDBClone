@@ -2,6 +2,7 @@ const dataApI = 'https://www.omdbapi.com/?apikey=914235e5';
 
 favourites();
 
+// get the favourites list from local storage
 async function favourites(){
     let isFav = localStorage.getItem("movies");
     let moviesArray = JSON.parse(isFav);
@@ -15,6 +16,7 @@ async function favourites(){
     }
 }
 
+// fetch the data for the favourite movie item
 async function searchInAPI(APIUrl) {
     let moviesData = await fetch(APIUrl);
     if(moviesData.status == 200){
@@ -22,22 +24,25 @@ async function searchInAPI(APIUrl) {
     }
 }
 
+// Append Html code and content to it using fetched data
 async function moviesContent(moviesData){
-    console.log(moviesData);
     let movieContent = document.createElement('div');
     movieContent.className = "movie-container";
     movieContent.id = moviesData.imdbID;
 
+    // check if the current movie section have been added to fav using local storage
     let isFav = localStorage.getItem("movies");
     let moviesArray = JSON.parse(isFav);
     let fav_class = "";
 
+    // if current movie section is added to fav => append class = isFav
     if(moviesArray.includes(moviesData.imdbID)){
         fav_class = "isFav";
     }else{
         fav_class = "";
     }
 
+    // Html code to display current movie section
     movieContent.innerHTML = `
         <div class="movie-image">
             <img src="${moviesData.Poster}" alt=""  id="image-container">
@@ -54,17 +59,16 @@ async function moviesContent(moviesData){
             </div>
         </div>
     `
-    console.log(movieContent)
     document.getElementById('movie').appendChild(movieContent);
 }
 
 document.addEventListener('click', (event) => {
-
+    // Click event listener on movie image to redirect it to details page for currenttly selected movie
     if(event.target.id == "image-container"){
         localStorage.setItem('currentImage', event.target.parentNode.parentNode.id);
         window.open('./details.html');
     }
-
+    // Clcick event listener to monitor if user clicks movie as favourite
     if(event.target.id == "fav"){
         console.log(event.target.parentNode.parentNode.id);
            let ID = event.target.parentNode.parentNode.id;
@@ -72,11 +76,9 @@ document.addEventListener('click', (event) => {
            let moviesArray = JSON.parse(isFav);
            if(!moviesArray.includes(ID)){
                // Add it to fav
-               console.log("Add to Fav" + ID)
                moviesArray.push(ID)
                event.target.classList.add("isFav");
            }else {
-                console.log("remove from Fav" + ID)
                 event.target.classList.remove("isFav");
                 const index = moviesArray.indexOf(ID);
                 if (index > -1) {
